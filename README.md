@@ -1,4 +1,4 @@
-# BackpackJS [![Build Status](https://travis-ci.org/mattdrose/backpackjs.svg?branch=master)](https://travis-ci.org/mattdrose/backpackjs) <!--[![Sauce Test Status](https://saucelabs.com/buildstatus/backpackjs)](https://saucelabs.com/u/backpackjs)-->
+# BackpackJS [![Build Status](https://travis-ci.org/mattdrose/backpackjs.svg?branch=master)](https://travis-ci.org/mattdrose/backpackjs) [![Sauce Test Status](https://saucelabs.com/buildstatus/backpackjs)](https://saucelabs.com/u/backpackjs)
 
 I love jQuery, but I hate bloat. The struggle is real. BackpackJS helps you keep the syntax of jQuery, while replacing it with your own vanilla javascript.
 
@@ -256,6 +256,6 @@ bp('#js-tooltip').tooltip({
 console.log(bp('#js-tooltip')[0]['bp-tooltip'].settings.tip) // 'My last tip.';
 ```
 
-<!-- ## Browser Tests Status
+## Browser Tests Status
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/backpackjs.svg)](https://saucelabs.com/u/backpackjs) -->
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/backpackjs.svg)](https://saucelabs.com/u/backpackjs)

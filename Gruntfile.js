@@ -111,11 +111,6 @@ module.exports = function (grunt) {
               version: '9'
             },
             {
-              browserName: 'internet explorer',
-              platform: 'Windows 7',
-              version: '8'
-            },
-            {
               browserName: 'firefox',
               platform: 'Windows 7',
               version: '29'
@@ -140,5 +135,5 @@ module.exports = function (grunt) {
   // Default task.
   grunt.registerTask('default', ['jshint', 'connect', 'qunit']);
   grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
-  grunt.registerTask('ci', ['jshint', 'connect', 'qunit', /*'saucelabs-qunit'*/]);
+  grunt.registerTask('ci', ['jshint', 'connect', 'qunit', 'saucelabs-qunit']);
 };

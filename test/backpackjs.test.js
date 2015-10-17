@@ -210,7 +210,7 @@ QUnit.testStart(function(testDetails){
   module("Plugin Methods and Variables", {
     // This will run before each test in this module.
     setup: function() {
-      this.b_el = bp("<div>");
+      this.b_el = bp("<div/>");
 
       bp.pack("test", {
         pub: "public",
@@ -342,7 +342,7 @@ QUnit.testStart(function(testDetails){
   module("Events", {
     // This will run before each test in this module.
     setup: function() {
-      this.b_el = bp("<div>");
+      this.b_el = bp("<div/>");
       this.$el = $(this.b_el[0]);
     },
     teardown: function() {

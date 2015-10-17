@@ -33,8 +33,8 @@
     // HANDLE: $(string)
     if ( typeof selector === "string" ) {
       // HANDLE: $(html)
-      if ( selector[ 0 ] === "<" &&
-        selector[ selector.length - 1 ] === ">" &&
+      if ( selector[0] === "<" &&
+        selector[selector.length - 1] === ">" &&
         selector.length >= 3 ) {
 
         this[0] = bp.htmlParser

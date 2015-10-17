@@ -1,8 +1,14 @@
-# BackpackJS <!--[![Build Status](https://travis-ci.org/mattdrose/backpackjs.svg?branch=master)](https://travis-ci.org/mattdrose/backpackjs) [![Sauce Test Status](https://saucelabs.com/buildstatus/backpackjs)](https://saucelabs.com/u/backpackjs)-->
+# BackpackJS [![Build Status](https://travis-ci.org/mattdrose/backpackjs.svg?branch=master)](https://travis-ci.org/mattdrose/backpackjs) <!--[![Sauce Test Status](https://saucelabs.com/buildstatus/backpackjs)](https://saucelabs.com/u/backpackjs)-->
 
 I love jQuery, but I hate bloat. The struggle is real. BackpackJS helps you keep the syntax of jQuery, while replacing it with your own vanilla javascript.
 
-BackpackJS is two things: a way to select DOM elements, and a way to add plugins and helpers to manipulate selected elements. That's it. There's nothing fancy here—just an interface that helps you do your thing.
+BackpackJS is two things: a way to select DOM elements, and a way to add plugins and helpers to manipulate selected elements. That's it. There's nothing fancy here—just an interface that helps you do your thing. It's like programming on air.
+
+| Library       | Minified | gzip  |
+| ------------- |---------:| -----:|
+| **jQuery**    |    ~96kb | ~34kb |
+| **Zepto.js**  |    ~25kb | ~10kb |
+| **BackpackJS**|     ~2kb |  ~1kb |
 
 Feel free to poke around the `/examples`, or read up on documentation.
 
@@ -28,7 +34,7 @@ Make sure BackpackJS is loaded before your add-ons. Whether it be loaded as an A
 
 ### Selector
 
-The BackpackJS is much like jQuery's, only it's lightweight by taking advantage of the query selectors built into modern browsers.
+The BackpackJS selector is much like jQuery's, only it's lightweight by taking advantage of the query selectors built into modern browsers.
 
 ``` javascript
 bp('#js-ids');

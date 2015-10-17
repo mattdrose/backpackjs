@@ -1,0 +1,30 @@
+{
+  "name": "backpackjs",
+  "title": "BackpackJS",
+  "description": "A javascript library to help you quickly write custom plugins to manipulate the DOM.",
+  "keywords": [
+    "jquery",
+    "plugin",
+    "module",
+    "backpack",
+    "backpackjs"
+  ],
+  "homepage": "https://github.com/mattdrose/backpackjs",
+  "author": {
+    "name": "Matt Rose",
+    "url": "http://mattrose.ca"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mattdrose/backpackjs.git"
+  },
+  "bugs": "https://github.com/mattdrose/backpackjs/issues",
+  "license": "MIT",
+  "main": "backpack.js",
+  "ignore": [
+    "test",
+    "Gruntfile.js",
+    "package.json",
+    "*.md"
+  ]
+}

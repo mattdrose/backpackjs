@@ -37,9 +37,15 @@
         selector[selector.length - 1] === ">" &&
         selector.length >= 3 ) {
 
-        this[0] = bp.htmlParser
-                          .parseFromString(selector, "application/xml")
-                          .documentElement;
+        // Parse html
+        try {
+          this[0] = bp.htmlParser
+                      .parseFromString(selector, "application/xml")
+                      .documentElement;
+        } catch (e) {
+          throw 'BackpackJS attempted to parse invalid html.';
+        }
+
         this.length = 1;
         return this;
 

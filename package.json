@@ -1,6 +1,6 @@
 {
   "name": "backpackjs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A javascript library to help you quickly write custom plugins to manipulate the DOM.",
   "author": {
     "name": "Matt Rose",

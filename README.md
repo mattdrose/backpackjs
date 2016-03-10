@@ -19,13 +19,13 @@ Feel free to poke around the `/examples`, or read up on documentation.
 ### Bower
 
 ```
-bower install backpackjs
+bower install backpackjs --save-dev
 ```
 
 ### NPM
 
 ```
-npm install backpackjs
+npm install backpackjs --save-dev
 ```
 
 ## Usage

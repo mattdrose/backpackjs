@@ -23,6 +23,13 @@
 
   bp.htmlParser = new DOMParser();
 
+  // Whether an object is an array or array-like object of nodes
+  bp.areNodes = function(nodes) {
+    return typeof nodes === 'object' &&
+        nodes.hasOwnProperty('length') &&
+        (nodes.length === 0 || (typeof nodes[0] === "object" && nodes[0].nodeType > 0));
+  };
+
   bp.Object = function( selector ) {
 
     // HANDLE: $(""), $(null), $(undefined), $(false)
@@ -61,9 +68,19 @@
       }
 
     // HANDLE: $(DOMElement)
-    } else if ( selector.nodeType ) {
+    } else if ( selector.nodeType > 0 ) {
       this[0] = selector;
       this.length = 1;
+      return this;
+
+    // HANDLE: $(array||nodelist)
+    } else if ( bp.areNodes(selector) ) {
+      var arraySelector = Array.prototype.slice.call(selector);
+
+      for ( var i = 0; i < arraySelector.length; i++ ) {
+        this[i] = arraySelector[i];
+      }
+      this.length = arraySelector.length;
       return this;
     }
   };

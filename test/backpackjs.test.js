@@ -108,6 +108,37 @@ QUnit.testStart(function(testDetails){
     strictEqual(Btest[0], $test[0]);
   });
 
+  test("Selects by element object", function() {
+    expect(2);
+
+    var el = document.getElementById("js-test-1");
+    var Btest = bp(el);
+    var $test = $(el);
+
+    strictEqual(Btest.length, $test.length);
+    strictEqual(Btest[0], el);
+  });
+
+  test("Selects by array of nodes", function() {
+    expect(2);
+
+    var array = [document.getElementById("js-test-1"), document.getElementById("js-test-1")];
+    var Btest = bp(array);
+
+    strictEqual(Btest.length, array.length);
+    strictEqual(Btest[0], array[0]);
+  });
+
+  test("Selects by Nodelist", function() {
+    expect(2);
+
+    var nodeList = document.querySelectorAll("js-test");
+    var Btest = bp(nodeList);
+
+    strictEqual(Btest.length, nodeList.length);
+    strictEqual(Btest[0], nodeList[0]);
+  });
+
   test("Boiler function is publicly accessible", function() {
     expect(1);
 

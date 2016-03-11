@@ -23,7 +23,7 @@
 
   bp.htmlParser = new DOMParser();
 
-  // Whether an object is an array or array-like object of nodes
+  // Whether argument is an array or array-like object of node objects
   bp.areNodes = function(nodes) {
     return typeof nodes === 'object' &&
         nodes.hasOwnProperty('length') &&
@@ -114,11 +114,29 @@
 
   bp.pack = function( namespace, base ) {
 
+    // Add method
     if (typeof base === "function") {
-      bp.fn[namespace] = base;
+
+      // If autoIterate is true, iterate through elements
+      if (arguments[2] === true) {
+        bp.fn[namespace] = function() {
+          for (var i = 0; i < this.length; i++) {
+
+            // Pass the element object as `this`
+            base.apply(this[i], arguments);
+          }
+          return this;
+        };
+
+      // Otherwise, pass backpack object as `this`
+      } else {
+        bp.fn[namespace] = base;
+      }
+
       return;
     }
 
+    // Setup a plugin
     bp.fn[namespace] = function () {
 
       var args = Array.prototype.slice.call(arguments),

@@ -76,6 +76,12 @@ QUnit.testStart(function(testDetails){
     ok(bp(false).length == 0);
   });
 
+  test("Pack method is publicly accessible", function() {
+    expect(1);
+
+    equal(typeof bp.pack, "function");
+  });
+
   module("Selecting Elements");
 
   test("Selects by class", function() {
@@ -139,13 +145,17 @@ QUnit.testStart(function(testDetails){
     strictEqual(Btest[0], nodeList[0]);
   });
 
-  test("Boiler function is publicly accessible", function() {
-    expect(1);
+  test("Selects by Nodelist", function() {
+    expect(2);
 
-    equal(typeof bp.pack, "function");
+    var nodeList = document.querySelectorAll("js-test");
+    var Btest = bp(nodeList);
+
+    strictEqual(Btest.length, nodeList.length);
+    strictEqual(Btest[0], nodeList[0]);
   });
 
-  module("Basic Plugin Functionality", {
+  module("Plugin Functionality", {
     // This will run before each test in this module.
     setup: function() {
       this.b_el1 = bp("#js-test-1");
@@ -201,11 +211,7 @@ QUnit.testStart(function(testDetails){
 
   });
 
-  /*
-   *
-   */
-
-  module("Caching Dom Objects", {
+  module("Plugin Caching Dom Objects", {
     // This will run before each test in this module.
     setup: function() {
       this.b_el = bp("#js-test-1");
@@ -233,11 +239,6 @@ QUnit.testStart(function(testDetails){
 
     strictEqual(this.b_el[0]["bp-test"]._selector, "#js-test-1");
   });
-
-  /*
-   *
-   */
-
   module("Plugin Methods and Variables", {
     // This will run before each test in this module.
     setup: function() {
@@ -293,11 +294,7 @@ QUnit.testStart(function(testDetails){
     strictEqual(this.b_el[0].innerHTML, "Hello World!");
   });
 
-  /*
-   *
-   */
-
-  module("Settings", {
+  module("Plugin Settings", {
     // This will run before each test in this module.
     setup: function() {
       this.b_el = bp("#js-test-1");
@@ -365,70 +362,69 @@ QUnit.testStart(function(testDetails){
     });
   });
 
-  /*
-   *
-   */
-
-  /** Tests don't work
-  module("Events", {
-    // This will run before each test in this module.
+  module("Method Functionality", {
     setup: function() {
-      this.b_el = bp("<div/>");
-      this.$el = $(this.b_el[0]);
-    },
-    teardown: function() {
-      this.b_el.unpack("test");
+      this.b_els = bp(".js-test");
     }
   });
 
-  test("Events run properly", function() {
+  test("Accepts function as pack", function() {
+    expect(1);
+
+    bp.pack("test", function() {});
+
+    ok(!!bp.fn.test);
+  });
+
+  test("Function runs when namespace is called", function() {
+    expect(1);
+
+    bp.pack("test", function() {
+      return "good";
+    });
+
+    strictEqual(this.b_els.test(), "good");
+  });
+
+  test("Arguments are passed", function() {
+    expect(1);
+
+    bp.pack("test", function( ret ) {
+      return ret;
+    });
+
+    strictEqual(this.b_els.test("good"), "good");
+  });
+
+  test("`this` is the bp object", function() {
+    expect(1);
+
+    bp.pack("test", function() {
+      return this;
+    });
+
+    strictEqual(this.b_els.test(), this.b_els);
+  });
+
+  test("Elements are automatically iterated when autoIterate option is passed", function() {
     expect(2);
 
-    bp.pack("test", {
-      events: {
-        "click": "onClick",
-        "mouseenter": "onHover"
-      },
-      foo: "bar",
-      onClick: function() {
-        this.foo = "click";
-      },
-      onHover: function() {
-        this.foo = "hover";
-      }
-    });
+    bp.pack("test", function() {
+      this.wasIterated = true;
+    }, true);
+    this.b_els.test()
 
-    this.b_el.test();
-
-    //Trigger click Event
-    strictEqual(this.b_el[0]["bp-test"].foo, "click");
-
-    //Trigger mouseenter Event
-    strictEqual(this.b_el[0]["bp-test"].foo, "hover");
+    ok(this.b_els[0].wasIterated);
+    ok(this.b_els[1].wasIterated);
   });
 
-  // Be nice to have this one day
-  test("Propogated events run properly", function() {
-    expect(3);
+  test("Method is chainable when autoIterate option is passed", function() {
+    expect(1);
 
-    bp.pack("test", {
-      events: {
-        "click li span": "onClick",
-      },
-      onClick: function(e, el) {
-        $(el).addClass("is-clicked");
-      }
-    });
+    bp.pack("test", function() {}, true);
 
-    bp("#js-test-3").test();
-    $("#js-target-1").click();
-    $("#js-target-2").click();
-    $("#js-target-3").click();
 
-    ok($("#js-target-1").hasClass("is-clicked"));
-    ok(!$("#js-target-2").hasClass("is-clicked"));
-    ok($("#js-target-3").hasClass("is-clicked"));
+    strictEqual(this.b_els.test(), this.b_els);
   });
-  */
 
 }(jQuery, bp));

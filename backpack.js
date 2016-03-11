@@ -229,8 +229,6 @@
               var handler = plugin.events[evt];
 
               plugin.el.addEventListener(evt, function (e) {
-                console.log(evt);
-                console.log(plugin[handler]);
                 plugin[handler].call(plugin, e, this);
               });
             });

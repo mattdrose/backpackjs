@@ -15,26 +15,86 @@
 
   'use strict';
 
-  var bp = function( selector ) {
-
+  var bp = function(selector) {
     return new bp.Object( selector );
-
   };
 
+  /**
+   * Built-in helpers
+   */
+  // HTML parser
   bp.htmlParser = new DOMParser();
 
   // Whether argument is an array or array-like object of node objects
   bp.areNodes = function(nodes) {
     return typeof nodes === 'object' &&
-        nodes.hasOwnProperty('length') &&
-        (nodes.length === 0 || (typeof nodes[0] === "object" && nodes[0].nodeType > 0));
+      nodes.hasOwnProperty('length') &&
+      (nodes.length === 0 || (typeof nodes[0] === "object" && nodes[0].nodeType > 0));
   };
 
-  bp.Object = function( selector ) {
+  // Whether object is array, or array like
+  // http://stackoverflow.com/questions/24048547/checking-if-an-object-is-array-like
+  bp.isArrayLike = function(obj) {
+    return (
+      Array.isArray(obj) ||
+      (!!obj &&
+        typeof obj === "object" &&
+        typeof (obj.length) === "number" &&
+        (obj.length === 0 ||
+          (obj.length > 0 &&
+          (obj.length - 1) in obj)
+        )
+      )
+    );
+  };
+
+  // Iterate through arrays, array-likes, and objects
+  bp.each = function(obj, callback) {
+    if (bp.isArrayLike(obj)) {
+      for (var i = 0; i < obj.length; i++ ) {
+        callback.call(obj[i], i, obj[i]);
+      }
+    } else {
+      for (var i in obj) {
+        callback.call(obj[i], i, obj[i]);
+      }
+    }
+
+    return obj;
+  };
+
+  // Recursively merges objects
+  bp.extend = function ( objects ) {
+    var extended = {};
+    var merge = function (obj) {
+      bp.each(obj, function(key, val) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+          if ( Object.prototype.toString.call(val) === '[object Object]' ) {
+            extended[key] = bp.extend(extended[key], val);
+          }
+          else {
+            extended[key] = val;
+          }
+        }
+      });
+    };
+
+    bp.each(arguments, function(i, obj) {
+      merge(obj);
+    });
+    return extended;
+  };
+
+  /**
+   * The Backpack Object
+   */
+  bp.Object = function(selector) {
+
+    var bpObj = this;
 
     // HANDLE: $(""), $(null), $(undefined), $(false)
     if ( !selector ) {
-      return this;
+      return bpObj;
     }
 
     // HANDLE: $(string)
@@ -46,42 +106,42 @@
 
         // Parse html
         try {
-          this[0] = bp.htmlParser
+          bpObj[0] = bp.htmlParser
                       .parseFromString(selector, "application/xml")
                       .documentElement;
         } catch (e) {
           throw 'BackpackJS attempted to parse invalid html.';
         }
 
-        this.length = 1;
-        return this;
+        bpObj.length = 1;
+        return bpObj;
 
       // HANDLE: $(selector)
       } else {
         var query = document.querySelectorAll( selector );
-        for ( var i = 0; i < query.length; i++ ) {
-          this[i] = query[i];
-        }
-        this.length = query.length;
-        this.selector = selector;
-        return this;
+        bp.each(query, function (i, node) {
+          bpObj[i] = node;
+        });
+        bpObj.length = query.length;
+        bpObj.selector = selector;
+        return bpObj;
       }
 
     // HANDLE: $(DOMElement)
     } else if ( selector.nodeType > 0 ) {
-      this[0] = selector;
-      this.length = 1;
-      return this;
+      bpObj[0] = selector;
+      bpObj.length = 1;
+      return bpObj;
 
-    // HANDLE: $(array||nodelist)
+    // HANDLE: $(array|nodelist)
     } else if ( bp.areNodes(selector) ) {
-      var arraySelector = Array.prototype.slice.call(selector);
+      var nodeArray = Array.prototype.slice.call(selector);
 
-      for ( var i = 0; i < arraySelector.length; i++ ) {
-        this[i] = arraySelector[i];
-      }
-      this.length = arraySelector.length;
-      return this;
+      bp.each(nodeArray, function (i, node) {
+        bpObj[i] = node;
+      });
+      bpObj.length = nodeArray.length;
+      return bpObj;
     }
   };
 
@@ -90,29 +150,10 @@
     splice: [].splice
   };
 
-  bp.extend = function ( objects ) {
-    var extended = {};
-    var merge = function (obj) {
-      for (var prop in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-          if ( Object.prototype.toString.call(obj[prop]) === '[object Object]' ) {
-            extended[prop] = bp.extend(extended[prop], obj[prop]);
-          }
-          else {
-            extended[prop] = obj[prop];
-          }
-        }
-      }
-    };
-    merge(arguments[0]);
-    for (var i = 1; i < arguments.length; i++) {
-      var obj = arguments[i];
-      merge(obj);
-    }
-    return extended;
-  };
-
-  bp.pack = function( namespace, base ) {
+  /**
+   * Pack Function
+   */
+  bp.pack = function(namespace, base) {
 
     // Add method
     if (typeof base === "function") {
@@ -145,9 +186,7 @@
           selector = this.selector,
           query = [];
 
-      for(var i = 0; i < this.length; i++) {
-
-        var el = this[i];
+      bp.each(this, function(i, el) {
 
         var cachedPlugin = el["bp-" + namespace];
 
@@ -172,7 +211,7 @@
           if (plugin.data) {
             var dataList = plugin.data;
             plugin.data = {};
-            dataList.forEach(function( name ) {
+            bp.each(dataList, function(i, name) {
               plugin.data[name] = plugin.el.getAttribute("data-" + name);
             });
           }
@@ -186,7 +225,7 @@
 
           //check for events
           if (plugin.events) {
-            for (var evt in plugin.events) {
+            bp.each(plugin.events, function(i, evt) {
               var handler = plugin.events[evt];
 
               plugin.el.addEventListener(evt, function (e) {
@@ -194,7 +233,7 @@
                 console.log(plugin[handler]);
                 plugin[handler].call(plugin, e, this);
               });
-            }
+            });
           }
 
           //fire up the plugin!
@@ -210,21 +249,26 @@
           }
 
         }
-      }
+      });
 
       return this;
     };
   };
 
+  /**
+   * Built-in bp methods
+   */
   // Add helper to remove plugin
-  bp.pack("unpack", function( namespace ) {
+  bp.pack("unpack", function(namespace) {
+    this["bp-" + namespace] = undefined;
+  }, true);
 
-    for(var i = 0; i < this.length; i++) {
-
-      this[i]["bp-" + namespace] = undefined;
-
-    }
-
+  // Add helper to easily loop through backpack object
+  bp.pack("each", function(callback) {
+    bp.each(this, function(i, el) {
+      callback.call(el, i, el);
+    });
+    return this;
   });
 
   return bp;

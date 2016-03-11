@@ -427,4 +427,32 @@ QUnit.testStart(function(testDetails){
     strictEqual(this.b_els.test(), this.b_els);
   });
 
+  module("Built in Methods");
+
+  test(".each", function() {
+    expect(2);
+
+    var bp_test = bp(".js-test");
+
+    bp_test.each(function(index, element) {
+      element.index = index;
+    });
+
+    strictEqual(bp_test[0].index, 0);
+    strictEqual(bp_test[1].index, 1);
+  });
+
+  test(".each passes element as this", function() {
+    expect(2);
+
+    var bp_test = bp(".js-test");
+
+    bp_test.each(function(index, element) {
+      element.thisIsElement = this === element;
+    });
+
+    ok(bp_test[0].thisIsElement);
+    ok(bp_test[1].thisIsElement);
+  });
+
 }(jQuery, bp));

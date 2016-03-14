@@ -2,7 +2,7 @@
 
 I love jQuery, but I hate bloat. The struggle is real. BackpackJS helps you keep the syntax of jQuery, while replacing it with your own vanilla javascript.
 
-BackpackJS is two things: a way to select DOM elements, and a way to add plugins and helpers to manipulate selected elements. That's it. There's nothing fancy here—just an interface that helps you do your thing. It's like programming on air.
+BackpackJS is two things: a way to select DOM elements, and a way to add plugins and helpers to manipulate selected elements. That's it. There's nothing fancy here—just an interface that helps you do your thing.
 
 | Library       | Minified | gzip  |
 | ------------- |---------:| -----:|

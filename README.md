@@ -12,8 +12,6 @@ BackpackJS is two things: a way to select DOM elements, and a way to add plugins
 
 Feel free to poke around the `/examples`, or read up on documentation.
 
-> Good luck traveller and pack lightly.
-
 ## Installation
 
 ### Bower
@@ -30,11 +28,11 @@ npm install backpackjs --save-dev
 
 ## Usage
 
-Make sure BackpackJS is loaded before your add-ons. Whether it be loaded as an AMD module, or a script tag in your header.
+Make sure BackpackJS is loaded before your add-ons. BackpackJS supports being loaded as an AMD or CommonJS module.
 
 ### Selector
 
-The BackpackJS selector is much like jQuery's, only it's lightweight by taking advantage of the query selectors built into modern browsers.
+The BackpackJS selector is much like jQuery's, only it's lightweight by taking advantage of the query selector built into modern browsers.
 
 ``` javascript
 bp('#js-ids');
@@ -43,7 +41,42 @@ bp('div');
 bp(domElement);
 ```
 
-### Plugins
+## Methods
+
+You can add methods by passing `bp.pack` your method name and a callback function.
+
+``` javascript
+bp.pack('setText', function(text) {/*...*/});
+```
+
+The callback will be run when the method is invoked, passing along any arguments. `this` will refer to the current Backpack Object (an array-like list of elements).
+
+``` javascript
+bp.pack('setText', function(text) {
+  this.each(function() {
+    this.textContent = text;
+  });
+  return this;
+});
+```
+
+The method can then be run on `bp()` selected elements.
+
+``` javascript
+bp('#js-hello').setText('Hello world!');
+```
+
+Note: You can pass an optional third argument to automatically iterate through all of the elements in the Backpack Object.
+
+``` javascript
+bp.pack('setText', function(text) {
+  this.textContent = text;
+}, true);
+```
+
+Note: BackpackJS comes with one built-in method: `.each`. This method works exactly like [jQuery's `.each`](http://api.jquery.com/each/).
+
+## Plugins
 
 Create a new plugin by passing `bp.pack` your plugins name and the *plugin object*.
 

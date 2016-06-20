@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.3.1
+
+  - Remove accidental inclusion of jquery in package.json :s
+
 ## v0.3.0
 
     - Added auto iteration option when passing custom methods

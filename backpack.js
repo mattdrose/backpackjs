@@ -22,8 +22,6 @@
   /**
    * Built-in helpers
    */
-  // HTML parser
-  bp.htmlParser = new DOMParser();
 
   // Whether argument is an array or array-like object of node objects
   bp.areNodes = function(nodes) {
@@ -104,14 +102,9 @@
         selector[selector.length - 1] === ">" &&
         selector.length >= 3 ) {
 
-        // Parse html
-        try {
-          bpObj[0] = bp.htmlParser
-                      .parseFromString(selector, "application/xml")
-                      .documentElement;
-        } catch (e) {
-          throw 'BackpackJS attempted to parse invalid html.';
-        }
+        var wrapper = document.createElement('div');
+        wrapper.innerHTML = selector;
+        bpObj[0] = wrapper.firstChild;
 
         bpObj.length = 1;
         return bpObj;

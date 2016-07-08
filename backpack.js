@@ -225,11 +225,9 @@
 
           //check for events
           if (plugin.events) {
-            bp.each(plugin.events, function(i, evt) {
-              var handler = plugin.events[evt];
-
-              plugin.el.addEventListener(evt, function (e) {
-                plugin[handler].call(plugin, e, this);
+            bp.each(plugin.events, function(eventName, method) {
+              plugin.el.addEventListener(eventName, function (e) {
+                plugin[method].call(plugin, e, this);
               });
             });
           }

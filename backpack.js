@@ -205,7 +205,8 @@
             var dataList = plugin.data;
             plugin.data = {};
             bp.each(dataList, function(i, name) {
-              plugin.data[name] = plugin.el.getAttribute("data-" + name);
+              var data = plugin.el.getAttribute("data-" + name);
+              if (data !== null) plugin.data[name] = data;
             });
           }
 

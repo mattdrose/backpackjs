@@ -28,7 +28,7 @@ module.exports = function (grunt) {
       options: {
         format: 'umd',
         globals: {
-          backpack: 'backpack',
+          backpackjs: 'bp',
         }
       },
       main: {
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
       },
       modules: {
         options: {
-          external: 'backpack'
+          external: 'backpackjs'
         },
         files: fs.readdirSync('lib/').filter(function(filename) {
           return junk.not(filename) && filename != 'backpack.js';
@@ -57,7 +57,7 @@ module.exports = function (grunt) {
     qunit: {
       all: {
         options: {
-          urls: ['http://localhost:9000/test/<%= pkg.name %>.html'],
+          urls: ['http://localhost:9000/test/backpack.html'],
           page : {
             viewportSize : { width: 1280, height: 800 }
           }
@@ -86,7 +86,7 @@ module.exports = function (grunt) {
     'saucelabs-qunit': {
       all: {
         options: {
-          urls: ['http://localhost:9000/test/<%= pkg.name %>.html'],
+          urls: ['http://localhost:9000/test/backpack.html'],
           build: process.env.TRAVIS_JOB_ID,
           browsers: [
             // iOS

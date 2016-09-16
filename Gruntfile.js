@@ -1,4 +1,6 @@
 'use strict';
+var fs = require('fs');
+var junk = require('junk');
 
 module.exports = function (grunt) {
   // Load all grunt tasks
@@ -16,6 +18,42 @@ module.exports = function (grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed MIT */\n',
     // Task configuration.
+    clean: {
+      options: {
+        force: true,
+      },
+      build: ['build/'],
+    },
+    rollup: {
+      options: {
+        format: 'umd',
+        globals: {
+          backpack: 'backpack',
+        }
+      },
+      main: {
+        options: {
+          moduleName: 'bp'
+        },
+        files: [{
+          src: 'lib/backpack.js',
+          dest: 'build/backpack.js'
+        }]
+      },
+      modules: {
+        options: {
+          external: 'backpack'
+        },
+        files: fs.readdirSync('lib/').filter(function(filename) {
+          return junk.not(filename) && filename != 'backpack.js';
+        }).map(function(filename) {
+          return {
+            src: 'lib/' + filename,
+            dest: 'build/' + filename
+          };
+        }),
+      }
+    },
     qunit: {
       all: {
         options: {
@@ -132,8 +170,16 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.registerTask('create-pkg-json', 'Creates package.json file for /build', function() {
+    grunt.log.writeln('Creating package.json file.');
+
+    var obj = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+    delete obj.devDependencies;
+    fs.writeFileSync("build/package.json", JSON.stringify(obj));
+  });
+
   // Default task.
-  grunt.registerTask('default', ['jshint', 'connect', 'qunit']);
-  grunt.registerTask('saucelabs', ['connect', 'saucelabs-qunit']);
-  grunt.registerTask('ci', ['jshint', 'connect', 'qunit', 'saucelabs-qunit']);
+  grunt.registerTask('build', ['clean', 'rollup', 'create-pkg-json']);
+  grunt.registerTask('default', ['build', 'jshint', 'connect', 'qunit']);
+  grunt.registerTask('ci', ['default', 'saucelabs-qunit']);
 };
